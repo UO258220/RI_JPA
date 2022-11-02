@@ -15,18 +15,35 @@ public class Intervention {
 	private WorkOrder workOrder;
 	private Mechanic mechanic;
 	private Set<Substitution> substitutions = new HashSet<>();
-	
+
 	public Intervention(LocalDateTime date, int minutes) {
 		ArgumentChecks.isNotNull(date);
-		ArgumentChecks.isTrue(minutes > 0);
+		ArgumentChecks.isTrue(minutes >= 0);
 		this.date = date;
 		this.minutes = minutes;
 	}
 
 	public Intervention(Mechanic mechanic, WorkOrder workOrder, int minutes) {
-		ArgumentChecks.isTrue(minutes > 0);
+		ArgumentChecks.isTrue(minutes >= 0);
+		this.minutes = minutes;
 		this.date = LocalDateTime.now();
 		Associations.Intervene.link(workOrder, this, mechanic);
+	}
+
+	public double getAmount() {
+		return computeSubstitutionsCost() + computeLaborCost();
+	}
+
+	private double computeSubstitutionsCost() {
+		double cost = 0.0;
+		for (Substitution s : getSubstitutions()) {
+			cost += s.getAmount();
+		}
+		return cost;
+	}
+
+	private double computeLaborCost() {
+		return getMinutes() * getWorkOrder().getVehicle().getVehicleType().getPricePerHour() / 60;
 	}
 
 	public LocalDateTime getDate() {
@@ -54,7 +71,7 @@ public class Intervention {
 	}
 
 	public Set<Substitution> getSubstitutions() {
-		return new HashSet<>( substitutions );
+		return new HashSet<>(substitutions);
 	}
 
 	Set<Substitution> _getSubstitutions() {

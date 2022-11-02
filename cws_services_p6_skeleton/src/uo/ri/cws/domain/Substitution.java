@@ -23,6 +23,10 @@ public class Substitution {
 		Associations.Substitute.link(sparePart, this, intervention);
 	}
 
+	public double getAmount() {
+		return quantity * sparePart.getPrice();
+	}
+
 	public int getQuantity() {
 		return quantity;
 	}

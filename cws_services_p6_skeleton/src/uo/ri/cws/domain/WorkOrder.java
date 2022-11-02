@@ -6,6 +6,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import uo.ri.util.assertion.ArgumentChecks;
+import uo.ri.util.assertion.StateChecks;
 
 public class WorkOrder {
 	public enum WorkOrderState {
@@ -44,6 +45,14 @@ public class WorkOrder {
 		this.state = state;
 	}
 
+	private void computeAmount() {
+		double amount = 0.0;
+		for (Intervention i : interventions) {
+			amount += i.getAmount();
+		}
+		this.amount = amount;
+	}
+
 	/**
 	 * Changes it to INVOICED state given the right conditions
 	 * This method is called from Invoice.addWorkOrder(...)
@@ -53,7 +62,9 @@ public class WorkOrder {
 	 *  - The work order is not linked with the invoice
 	 */
 	public void markAsInvoiced() {
-
+		StateChecks.isTrue(isFinished());
+		StateChecks.isNotNull(invoice);
+		this.state = WorkOrderState.INVOICED;
 	}
 
 	/**
@@ -66,7 +77,8 @@ public class WorkOrder {
 	 *  - The work order is not linked with a mechanic
 	 */
 	public void markAsFinished() {
-
+		this.state = WorkOrderState.FINISHED;
+		computeAmount();
 	}
 
 	/**
@@ -78,7 +90,7 @@ public class WorkOrder {
 	 *  - The work order is still linked with the invoice
 	 */
 	public void markBackToFinished() {
-
+		this.state = WorkOrderState.FINISHED;
 	}
 
 	/**
@@ -90,7 +102,8 @@ public class WorkOrder {
 	 *  - The work order is already linked with another mechanic
 	 */
 	public void assignTo(Mechanic mechanic) {
-
+		Associations.Assign.link(mechanic, this);
+		this.state = WorkOrderState.ASSIGNED;
 	}
 
 	/**
@@ -101,7 +114,7 @@ public class WorkOrder {
 	 * 	- The work order is not in ASSIGNED state
 	 */
 	public void desassign() {
-
+		this.state = WorkOrderState.OPEN;
 	}
 
 	/**
@@ -112,7 +125,7 @@ public class WorkOrder {
 	 * 	- The work order is not in FINISHED state
 	 */
 	public void reopen() {
-
+		this.state = WorkOrderState.OPEN;
 	}
 
 	public boolean isInvoiced() {
@@ -173,7 +186,7 @@ public class WorkOrder {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(date, vehicle);
+		return Objects.hash(date, vehicle, description);
 	}
 
 	@Override

@@ -4,11 +4,16 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 import uo.ri.util.assertion.ArgumentChecks;
+import uo.ri.util.assertion.StateChecks;
 
 public class CreditCard extends PaymentMean {
 	private String number;
 	private String type;
 	private LocalDate validThru;
+
+	public CreditCard(String number) {
+		this(number, "UNKNOWN", LocalDate.now().plusDays(1));
+	}
 	
 	public CreditCard(String number, String type, LocalDate validThru) {
 		ArgumentChecks.isNotEmpty(number);
@@ -17,6 +22,21 @@ public class CreditCard extends PaymentMean {
 		this.number = number;
 		this.type = type;
 		this.validThru = validThru;
+	}
+
+	/**
+	 * Augments the accumulated by the amount paid
+	 * 
+	 * @throws IllegalStateException if validity date expired
+	 */
+	@Override
+	public void pay(double amount) {
+		StateChecks.isTrue(isValidNow());
+		super.pay(amount);
+	}
+
+	public boolean isValidNow() {
+		return validThru.isAfter(LocalDate.now());
 	}
 
 	public String getNumber() {
@@ -29,6 +49,10 @@ public class CreditCard extends PaymentMean {
 
 	public LocalDate getValidThru() {
 		return validThru;
+	}
+
+	public void setValidThru(LocalDate validThru) {
+		this.validThru = validThru;
 	}
 
 	@Override

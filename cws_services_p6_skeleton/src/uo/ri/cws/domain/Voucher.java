@@ -3,18 +3,24 @@ package uo.ri.cws.domain;
 import java.util.Objects;
 
 import uo.ri.util.assertion.ArgumentChecks;
+import uo.ri.util.assertion.StateChecks;
 
 public class Voucher extends PaymentMean {
 	
 	private String code;
 	private double available = 0.0;
 	private String description;
+
+	public Voucher(String code, double available) {
+		this(code, "no-description", available);
+	}
 	
-	public Voucher(String code, double available, String description) {
+	public Voucher(String code, String description, double available) {
 		ArgumentChecks.isNotEmpty(code);
 		ArgumentChecks.isNotEmpty(description);
 		this.code = code;
 		this.description = description;
+		this.available = available;
 	}
 
 	/**
@@ -24,7 +30,9 @@ public class Voucher extends PaymentMean {
 	 */
 	@Override
 	public void pay(double amount) {
-
+		StateChecks.isTrue(this.available >= amount);
+		super.pay(amount);
+		this.available -= amount;
 	}
 
 	public String getCode() {
