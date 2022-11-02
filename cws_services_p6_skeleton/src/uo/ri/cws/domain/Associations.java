@@ -105,8 +105,7 @@ public class Associations {
 
 	public static class Intervene {
 
-		public static void link(WorkOrder workOrder, Intervention intervention,
-				Mechanic mechanic) {
+		public static void link(WorkOrder workOrder, Intervention intervention, Mechanic mechanic) {
 			intervention._setWorkOrder(workOrder);
 			intervention._setMechanic(mechanic);
 			workOrder._getInterventions().add(intervention);
@@ -124,8 +123,7 @@ public class Associations {
 
 	public static class Substitute {
 
-		public static void link(SparePart spare, Substitution sustitution,
-				Intervention intervention) {
+		public static void link(SparePart spare, Substitution sustitution, Intervention intervention) {
 			sustitution._setSparePart(spare);
 			sustitution._setIntervention(intervention);
 			spare._getSubstitutions().add(sustitution);
@@ -137,6 +135,42 @@ public class Associations {
 			sustitution.getIntervention()._getSubstitutions().remove(sustitution);
 			sustitution._setSparePart(null);
 			sustitution._setIntervention(null);
+		}
+
+	}
+
+	public static class Hire {
+
+		public static void link(Mechanic mechanic, Contract contract, ContractType type, ProfessionalGroup group) {
+			contract._setMechanic(mechanic);
+			contract._setContractType(type);
+			contract._setProfessionalGroup(group);
+			mechanic._setContract(contract);
+			type._getContracts().add(contract);
+			group._getContracts().add(contract);
+		}
+
+		public static void unlink(Contract contract) {
+			contract.getMechanic().get()._setContract(null);
+			contract.getType()._getContracts().remove(contract);
+			contract.getGroup()._getContracts().remove(contract);
+			contract._setMechanic(null);
+			contract._setContractType(null);
+			contract._setProfessionalGroup(null);
+		}
+
+	}
+
+	public static class Fire {
+
+		public static void link(Contract contract) {
+			contract._setFiredMechanic(contract.getMechanic().get());
+			contract.getMechanic().get()._getTerminatedContracts().add(contract);
+		}
+
+		public static void unlink(Contract contract) {
+			contract.getMechanic().get()._getTerminatedContracts().remove(contract);
+			contract._setFiredMechanic(null);
 		}
 
 	}

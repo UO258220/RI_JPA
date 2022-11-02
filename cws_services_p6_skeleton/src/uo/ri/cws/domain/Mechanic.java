@@ -1,6 +1,7 @@
 package uo.ri.cws.domain;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import uo.ri.util.assertion.ArgumentChecks;
@@ -14,6 +15,8 @@ public class Mechanic {
 	// accidental attributes
 	private Set<WorkOrder> assigned = new HashSet<>();
 	private Set<Intervention> interventions = new HashSet<>();
+	private Contract contract;
+	private Set<Contract> terminatedContracts = new HashSet<>();
 	
 	public Mechanic(String dni, String name, String surname) {
 		ArgumentChecks.isNotBlank(dni);
@@ -50,6 +53,26 @@ public class Mechanic {
 
 	Set<Intervention> _getInterventions() {
 		return interventions;
+	}
+
+	public Optional<Contract> getContractInForce() {
+		return contract == null ? Optional.empty() : Optional.of(contract);
+	}
+	
+	void _setContract(Contract contract) {
+		this.contract = contract;
+	}
+
+	public Set<Contract> getTerminatedContracts() {
+		return new HashSet<>(terminatedContracts);
+	}
+
+	Set<Contract> _getTerminatedContracts() {
+		return terminatedContracts;
+	}
+
+	public boolean isInForce() {
+		return getContractInForce().isPresent();
 	}
 
 }
