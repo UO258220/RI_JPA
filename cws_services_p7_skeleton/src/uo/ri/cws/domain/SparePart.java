@@ -4,16 +4,27 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import javax.persistence.Basic;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+
+import uo.ri.cws.domain.base.BaseEntity;
 import uo.ri.util.assertion.ArgumentChecks;
 
-public class SparePart {
+@Entity
+public class SparePart extends BaseEntity {
 	// natural attributes
+	@Basic(optional = false)
 	private String code;
+	@Basic(optional = false)
 	private String description;
 	private double price;
 
 	// accidental attributes
+	@OneToMany(mappedBy = "sparePart")
 	private Set<Substitution> substitutions = new HashSet<>();
+	
+	SparePart() {}
 
 	public SparePart(String code, String description, double price) {
 		ArgumentChecks.isNotEmpty(code);

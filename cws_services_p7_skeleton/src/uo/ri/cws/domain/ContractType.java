@@ -4,9 +4,10 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import uo.ri.cws.domain.base.BaseEntity;
 import uo.ri.util.assertion.ArgumentChecks;
 
-public class ContractType {
+public class ContractType extends BaseEntity {
 	
 	private String name;
 	private double compensationDays;

@@ -3,13 +3,22 @@ package uo.ri.cws.domain;
 import java.time.LocalDate;
 import java.util.Objects;
 
+import javax.persistence.Basic;
+import javax.persistence.Entity;
+
 import uo.ri.util.assertion.ArgumentChecks;
 import uo.ri.util.assertion.StateChecks;
 
+@Entity
 public class CreditCard extends PaymentMean {
+	@Basic(optional = false)
 	private String number;
+	@Basic(optional = false)
 	private String type;
+	@Basic(optional = false)
 	private LocalDate validThru;
+	
+	CreditCard() {}
 
 	public CreditCard(String number) {
 		this(number, "UNKNOWN", LocalDate.now().plusDays(1));

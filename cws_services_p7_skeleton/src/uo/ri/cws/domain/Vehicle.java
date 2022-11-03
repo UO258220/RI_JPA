@@ -4,16 +4,36 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+
+import uo.ri.cws.domain.base.BaseEntity;
 import uo.ri.util.assertion.ArgumentChecks;
 
-public class Vehicle {
+@Entity
+@Table(name = "TVEHICLES")
+public class Vehicle extends BaseEntity {
+	
+	@Column(unique = true)
 	private String plateNumber;
+	@Basic(optional = false)
+	@Column(name = "BRAND")
 	private String make;
+	@Basic(optional = false)
 	private String model;
 	
+	@ManyToOne
 	private Client client;
+	@ManyToOne
 	private VehicleType vehicleType;
+	@OneToMany(mappedBy = "vehicle")
 	private Set<WorkOrder> workOrders = new HashSet<>();
+	
+	Vehicle() {}
 	
 	public Vehicle(String platenumber, String make, String model) {
 		ArgumentChecks.isNotEmpty(platenumber);

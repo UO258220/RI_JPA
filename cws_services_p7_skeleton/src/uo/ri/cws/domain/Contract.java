@@ -6,9 +6,10 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 
+import uo.ri.cws.domain.base.BaseEntity;
 import uo.ri.util.assertion.ArgumentChecks;
 
-public class Contract {
+public class Contract extends BaseEntity {
 
 	public enum ContractState {
 		IN_FORCE, TERMINATED

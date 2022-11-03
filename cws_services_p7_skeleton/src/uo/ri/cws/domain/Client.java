@@ -4,18 +4,37 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+
+import uo.ri.cws.domain.base.BaseEntity;
 import uo.ri.util.assertion.ArgumentChecks;
 
-public class Client {
+@Entity
+public class Client extends BaseEntity {
+
+	@Column(unique = true)
 	private String dni;
+	@Basic(optional = false)
 	private String name;
+	@Basic(optional = false)
 	private String surname;
+	@Basic(optional = false)
 	private String email;
+	@Basic(optional = false)
 	private String phone;
+	@Embedded
 	private Address address;
 
+	@OneToMany(mappedBy = "client")
 	private Set<PaymentMean> paymentMeans = new HashSet<>();
+	@OneToMany(mappedBy = "client")
 	private Set<Vehicle> vehicles = new HashSet<>();
+
+	Client() {}
 
 	public Client(String dni) {
 		this(dni, "no-name", "no-surname", "no@email", "no-phone", null);

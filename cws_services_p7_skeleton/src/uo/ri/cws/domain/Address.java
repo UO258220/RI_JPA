@@ -1,8 +1,15 @@
 package uo.ri.cws.domain;
 
+import javax.persistence.Basic;
+import javax.persistence.Embeddable;
+
+@Embeddable
 public class Address {
+	@Basic(optional = false)
 	private String street;
+	@Basic(optional = false)
 	private String city;
+	@Basic(optional = false)
 	private String zipCode;
 
 	public Address() {

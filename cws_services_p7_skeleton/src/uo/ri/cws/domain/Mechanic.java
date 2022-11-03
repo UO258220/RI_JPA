@@ -4,19 +4,33 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.Transient;
+
+import uo.ri.cws.domain.base.BaseEntity;
 import uo.ri.util.assertion.ArgumentChecks;
 
-public class Mechanic {
+@Entity
+public class Mechanic extends BaseEntity {
 	// natural attributes
+	@Column(unique = true)
 	private String dni;
 	private String surname;
 	private String name;
 
 	// accidental attributes
+	@OneToMany(mappedBy = "mechanic")
 	private Set<WorkOrder> assigned = new HashSet<>();
+	@OneToMany(mappedBy = "mechanic")
 	private Set<Intervention> interventions = new HashSet<>();
+	@Transient
 	private Contract contract;
+	@Transient
 	private Set<Contract> terminatedContracts = new HashSet<>();
+	
+	Mechanic() {}
 	
 	public Mechanic(String dni, String name, String surname) {
 		ArgumentChecks.isNotBlank(dni);

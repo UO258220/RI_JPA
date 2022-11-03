@@ -5,10 +5,27 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+
+import uo.ri.cws.domain.base.BaseEntity;
 import uo.ri.util.assertion.ArgumentChecks;
 import uo.ri.util.assertion.StateChecks;
 
-public class WorkOrder {
+@Entity
+@Table(uniqueConstraints = {
+		@UniqueConstraint(columnNames = {
+				"VEHICLE_ID", "DATE"
+		})
+})
+public class WorkOrder extends BaseEntity {
 	public enum WorkOrderState {
 		OPEN,
 		ASSIGNED,
@@ -17,16 +34,26 @@ public class WorkOrder {
 	}
 
 	// natural attributes
+	@Basic(optional = false)
 	private LocalDateTime date;
+	@Basic(optional = false)
 	private String description;
 	private double amount = 0.0;
+	@Enumerated(EnumType.STRING)
+	@Column(name = "STATUS")
 	private WorkOrderState state = WorkOrderState.OPEN;
 
 	// accidental attributes
+	@ManyToOne
 	private Vehicle vehicle;
+	@ManyToOne
 	private Mechanic mechanic;
+	@ManyToOne
 	private Invoice invoice;
+	@OneToMany(mappedBy = "workOrder")
 	private Set<Intervention> interventions = new HashSet<>();
+	
+	WorkOrder() {}
 
 	public WorkOrder(Vehicle vehicle, String description) {
 		ArgumentChecks.isNotEmpty(description);

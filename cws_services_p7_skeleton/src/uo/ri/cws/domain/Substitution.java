@@ -2,15 +2,24 @@ package uo.ri.cws.domain;
 
 import java.util.Objects;
 
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+
+import uo.ri.cws.domain.base.BaseEntity;
 import uo.ri.util.assertion.ArgumentChecks;
 
-public class Substitution {
+@Entity
+public class Substitution extends BaseEntity {
 	// natural attributes
 	private int quantity;
 
 	// accidental attributes
+	@ManyToOne
 	private SparePart sparePart;
+	@ManyToOne
 	private Intervention intervention;
+	
+	Substitution() {}
 
 	public Substitution(int quantity) {
 		ArgumentChecks.isTrue(quantity > 0);

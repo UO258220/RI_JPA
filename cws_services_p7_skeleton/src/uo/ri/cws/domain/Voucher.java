@@ -2,14 +2,21 @@ package uo.ri.cws.domain;
 
 import java.util.Objects;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+
 import uo.ri.util.assertion.ArgumentChecks;
 import uo.ri.util.assertion.StateChecks;
 
+@Entity
 public class Voucher extends PaymentMean {
 	
+	@Column(unique = true)
 	private String code;
 	private double available = 0.0;
 	private String description;
+	
+	Voucher() {}
 
 	public Voucher(String code, double available) {
 		this(code, "no-description", available);

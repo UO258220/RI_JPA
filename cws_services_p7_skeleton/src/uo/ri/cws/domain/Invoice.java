@@ -6,11 +6,20 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.OneToMany;
+
+import uo.ri.cws.domain.base.BaseEntity;
 import uo.ri.util.assertion.ArgumentChecks;
 import uo.ri.util.assertion.StateChecks;
 import uo.ri.util.math.Round;
 
-public class Invoice {
+@Entity
+public class Invoice extends BaseEntity {
 
 	private static final LocalDate VAT_CHANGE_DATE = LocalDate.of(2012, 7, 1);
 	private static final double VAT_BEFORE = 0.18;
@@ -21,15 +30,23 @@ public class Invoice {
 	}
 
 	// natural attributes
+	@Column(unique = true)
 	private Long number;
+	@Basic(optional = false)
 	private LocalDate date;
 	private double amount;
 	private double vat;
+	@Enumerated(EnumType.STRING)
+	@Column(name = "STATUS")
 	private InvoiceState state = InvoiceState.NOT_YET_PAID;
 
 	// accidental attributes
+	@OneToMany(mappedBy = "invoice")
 	private Set<WorkOrder> workOrders = new HashSet<>();
+	@OneToMany(mappedBy = "invoice")
 	private Set<Charge> charges = new HashSet<>();
+	
+	Invoice() {}
 
 	public Invoice(Long number) {
 		this(number, LocalDate.now(), new ArrayList<>());

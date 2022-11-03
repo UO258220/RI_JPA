@@ -4,9 +4,10 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+import uo.ri.cws.domain.base.BaseEntity;
 import uo.ri.util.assertion.ArgumentChecks;
 
-public class ProfessionalGroup {
+public class ProfessionalGroup extends BaseEntity {
 
 	private String name;
 	private double productivityRate;

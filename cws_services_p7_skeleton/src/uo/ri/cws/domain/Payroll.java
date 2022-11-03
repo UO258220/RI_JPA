@@ -3,7 +3,9 @@ package uo.ri.cws.domain;
 import java.time.LocalDate;
 import java.util.Objects;
 
-public class Payroll {
+import uo.ri.cws.domain.base.BaseEntity;
+
+public class Payroll extends BaseEntity {
 
 	private LocalDate date;
 	private double bonus;
